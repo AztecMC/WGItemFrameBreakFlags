@@ -1,0 +1,25 @@
+name: WGItemFrameBreakFlags
+main: com.github.crashdemons.wgitemframebreakflags.WGItemFrameBreakFlagsPlugin
+version: ${project.version}
+author: com.github.crashdemons
+api-version: 1.13
+description: Example Plugin
+
+depend: [ WorldGuard ]
+
+
+#commands:
+#    YourCommand:
+#        usage: "/<command> <args>"
+#        description: Example command
+#        aliases: [yourcommandalias]
+#        permission: yourplugin.yourpermission
+#permissions:
+#    YourSpigotPlugin.*:
+#        description: Gives all Example Permissions
+#        default: false
+#        children:
+#            yourplugin.yourpermission: true
+#    yourplugin.yourpermission:
+#        description: Gives access to the example command
+#        default: op
