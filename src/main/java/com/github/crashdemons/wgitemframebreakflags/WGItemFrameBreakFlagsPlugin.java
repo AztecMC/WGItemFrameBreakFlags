@@ -41,7 +41,9 @@ public class WGItemFrameBreakFlagsPlugin extends JavaPlugin implements Listener 
     WorldGuard wg = null;
     
     private static final String SUFFIX_DESTROY = "-destroy";
-    private static final EntityType[] SUPPORTED_HANGING_ENTITIES = new EntityType[]{EntityType.ITEM_FRAME,EntityType.PAINTING};
+    private static final EntityType[] SUPPORTED_HANGING_ENTITIES = new EntityType[]{
+        EntityType.ITEM_FRAME,EntityType.PAINTING, EntityType.GLOW_ITEM_FRAME
+    };
     
     private static final HashMap<HangingBreakEvent.RemoveCause,HashMap<EntityType,StateFlag>> causeFlagMap = new HashMap<>();
     private static final ArrayList<StateFlag> flags = new ArrayList<>();
@@ -52,6 +54,7 @@ public class WGItemFrameBreakFlagsPlugin extends JavaPlugin implements Listener 
             if(cause==HangingBreakEvent.RemoveCause.ENTITY) continue;//entity-item-frame-destroy already handled by WorldGuard.
             HashMap<EntityType,StateFlag> entityMap = new HashMap<>();
             for(EntityType hangingType : SUPPORTED_HANGING_ENTITIES){
+                if(hangingType==EntityType.GLOW_ITEM_FRAME) continue;
                 String flagName = getFlagName(cause,hangingType);
                 StateFlag flag = new StateFlag(flagName,true);
                 entityMap.put(hangingType, flag);
@@ -65,6 +68,7 @@ public class WGItemFrameBreakFlagsPlugin extends JavaPlugin implements Listener 
         return cause.name().toLowerCase().replace("_", "-");
     }
     private static String getEntityName(EntityType hangingType){
+        if(hangingType==EntityType.GLOW_ITEM_FRAME) hangingType = EntityType.ITEM_FRAME;
         return hangingType.name().toLowerCase().replace("_", "-");
     }
     private static String getFlagName(HangingBreakEvent.RemoveCause cause, EntityType hangingType){
@@ -72,6 +76,7 @@ public class WGItemFrameBreakFlagsPlugin extends JavaPlugin implements Listener 
     }
     
     private static StateFlag getRelevantFlag(HangingBreakEvent.RemoveCause cause, EntityType hangingType){
+        if(hangingType==EntityType.GLOW_ITEM_FRAME) hangingType = EntityType.ITEM_FRAME;
         HashMap<EntityType,StateFlag> entityFlagMap = causeFlagMap.get(cause);
         if(entityFlagMap==null) return null;
         return entityFlagMap.get(hangingType);
@@ -182,6 +187,10 @@ public class WGItemFrameBreakFlagsPlugin extends JavaPlugin implements Listener 
         LocalPlayer wgPlayer = causePlayer==null? null : getWorldGuardPlugin().wrapPlayer(causePlayer);
         
         StateFlag flag = getRelevantFlag(cause,hangingEntity.getType());
+        if(flag==null){
+            this.getLogger().warning("Unknown HangingBreakEvent combination: "+cause.name()+" "+hangingEntity.getType().name());
+            return;
+        }
         
         com.sk89q.worldedit.util.Location wgLoc = BukkitAdapter.adapt(loc);
         RegionQuery query = getWorldGuard().getPlatform().getRegionContainer().createQuery();
