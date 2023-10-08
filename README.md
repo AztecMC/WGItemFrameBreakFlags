@@ -1,6 +1,6 @@
 # WGItemFrameBreakFlags
-
-Requires Worldguard 7 and a 1.16+ server. Other configurations are untested.
+Worldguard plugin for protecting against Item Frame breaking.
+Requires Worldguard 7 and a 1.16+ server. Other configurations are untested, other plugins may interfere with this one.
 
 This plugin was specifically made because if the following behavior in spigot https://hub.spigotmc.org/jira/browse/SPIGOT-3999
 which means Worldguard does not catch Physics events causes by Boats, as well as other Removal Causes ( https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/event/hanging/HangingBreakEvent.RemoveCause.html )
